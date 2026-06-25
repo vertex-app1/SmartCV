@@ -9,13 +9,12 @@
 </head>
 <body>
 
-<!-- ===== خلفية الفيديو ===== -->
 <video class="video-background" autoplay muted loop playsinline>
     <source src="vedio/vedio.mp4" type="video/mp4">
 </video>
 <div class="overlay"></div>
 
-<!-- ===== لوحة التحرير (يسار) ===== -->
+<!-- لوحة التحرير -->
 <aside class="editor-panel">
     <h3 class="editor-title">✏️ Edit Your CV</h3>
 
@@ -51,18 +50,29 @@
     </div>
 
     <button class="btn-primary" onclick="updateAll()">▶ Apply Changes</button>
+
+    <!-- ===== Generate CV - داخل اللوحة ===== -->
+    <div class="generate-box">
+        <p class="generate-title">🚀 Get Your CV Link</p>
+        <input type="text" id="cvUsername" placeholder="your-username" class="generate-input">
+        <button class="btn-generate" onclick="generateCV()" id="generateBtn">
+            Generate Link
+        </button>
+        <div id="resultBox" style="display:none; margin-top:12px">
+            <p style="color:#a4b465; font-size:12px; margin-bottom:6px">✅ Your CV is live at:</p>
+            <a id="cvLink" href="#" target="_blank"></a>
+        </div>
+    </div>
 </aside>
 
-<!-- ===== معاينة السيرة ===== -->
+<!-- معاينة السيرة -->
 <main class="cv-preview">
-
-    <!-- Header -->
     <header>
         <div class="profile-container">
-            <img id="previewImg" class="profile-img" src="https://ui-avatars.com/api/?name=Your+Name&background=535d0a&color=fff&size=150" alt="Profile">
+            <img id="previewImg" class="profile-img"
+                 src="https://ui-avatars.com/api/?name=Your+Name&background=535d0a&color=fff&size=150" alt="Profile">
         </div>
 
-        <!-- مشغل الصوت -->
         <div class="audio-player">
             <button id="playBtn">▶</button>
             <div class="progress-container" id="progressContainer">
@@ -88,7 +98,6 @@
 
     <hr/>
 
-    <!-- About Me -->
     <section id="about" class="glass-box">
         <h2>About Me</h2>
         <textarea id="aboutMe" class="about-input" placeholder="Write something about yourself..."></textarea>
@@ -96,7 +105,6 @@
 
     <hr/>
 
-    <!-- My Work -->
     <section id="myWork" class="glass-box">
         <h2>My Work</h2>
         <div id="projectsContainer">
@@ -104,12 +112,10 @@
         </div>
         <button class="btn-secondary" id="addProjectBtn">+ Add Project</button>
     </section>
-
 </main>
 
-<!-- ===== Scripts ===== -->
 <script>
-// ---- صورة البروفايل ----
+// صورة البروفايل
 document.getElementById("profileImage").addEventListener("change", function(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -120,35 +126,27 @@ document.getElementById("profileImage").addEventListener("change", function(e) {
     reader.readAsDataURL(file);
 });
 
-// ---- تحديث كل شيء دفعة واحدة ----
+// تحديث المعاينة
 function updateAll() {
     const name  = document.getElementById("fullName").value.trim();
     const title = document.getElementById("titleInput").value.trim();
-
     document.getElementById("displayName").innerText  = name  || "Your Name";
     document.getElementById("displayTitle").innerText = title || "Your Title";
-
     const linkedin = document.getElementById("linkedinInput").value.trim();
     document.getElementById("linkedinLink").href = linkedin || "#";
-
-    document.getElementById("aboutLink").href =
-        document.getElementById("aboutInput").value.trim() || "#about";
-
-    document.getElementById("workLink").href =
-        document.getElementById("workInput").value.trim() || "#myWork";
+    document.getElementById("aboutLink").href = document.getElementById("aboutInput").value.trim() || "#about";
+    document.getElementById("workLink").href  = document.getElementById("workInput").value.trim()  || "#myWork";
 }
 
-// ---- تحديث فوري عند الكتابة ----
+// تحديث فوري
 document.getElementById("fullName").addEventListener("input", () => {
-    const v = document.getElementById("fullName").value.trim();
-    document.getElementById("displayName").innerText = v || "Your Name";
+    document.getElementById("displayName").innerText = document.getElementById("fullName").value.trim() || "Your Name";
 });
 document.getElementById("titleInput").addEventListener("input", () => {
-    const v = document.getElementById("titleInput").value.trim();
-    document.getElementById("displayTitle").innerText = v || "Your Title";
+    document.getElementById("displayTitle").innerText = document.getElementById("titleInput").value.trim() || "Your Title";
 });
 
-// ---- إضافة مشاريع ----
+// إضافة مشاريع
 document.getElementById("addProjectBtn").addEventListener("click", () => {
     const input = document.createElement("input");
     input.type = "text";
@@ -157,7 +155,7 @@ document.getElementById("addProjectBtn").addEventListener("click", () => {
     document.getElementById("projectsContainer").appendChild(input);
 });
 
-// ---- مشغل الصوت ----
+// مشغل الصوت
 const audio             = document.getElementById("audio");
 const playBtn           = document.getElementById("playBtn");
 const progressEl        = document.getElementById("progress");
@@ -167,95 +165,94 @@ playBtn.addEventListener("click", () => {
     if (audio.paused) { audio.play();  playBtn.textContent = "❚❚"; }
     else              { audio.pause(); playBtn.textContent = "▶";  }
 });
-
 audio.addEventListener("timeupdate", () => {
     if (!audio.duration) return;
     progressEl.style.width = (audio.currentTime / audio.duration * 100) + "%";
 });
-
 progressContainer.addEventListener("click", (e) => {
     audio.currentTime = (e.offsetX / progressContainer.clientWidth) * audio.duration;
 });
-
 audio.addEventListener("ended", () => { playBtn.textContent = "▶"; });
-</script>
-    <!-- زر Generate -->
-<div class="glass-box" style="text-align:center; margin: 20px auto; width:65%">
-    <h2>🚀 Get Your CV Link</h2>
-    
-    <div class="input-group" style="width:80%; margin: 15px auto">
-        <label>Choose Your Username</label>
-        <input type="text" id="cvUsername" placeholder="ahmed-ali">
-    </div>
 
-    <button class="btn-primary" onclick="generateCV()" id="generateBtn">
-        🚀 Generate My CV Link
-    </button>
-
-    <div id="resultBox" style="display:none; margin-top:20px">
-        <p style="color:#a4b465; margin-bottom:10px">✅ Your CV is live at:</p>
-        <a id="cvLink" href="#" target="_blank" 
-           style="color:#fff; font-size:16px; word-break:break-all"></a>
-    </div>
-</div>
-
-<script>
-async function generateCV() {
-    const username = document.getElementById("cvUsername").value.trim();
-    if (!username) { alert("اكتب username أولاً!"); return; }
-
-    const btn = document.getElementById("generateBtn");
-    btn.textContent = "⏳ جاري الإنشاء...";
-    btn.disabled = true;
-
-    const name    = document.getElementById("displayName").innerText;
-    const title   = document.getElementById("displayTitle").innerText;
-    const about   = document.getElementById("aboutMe").value;
+// ===== Generate CV =====
+function buildCVHtml() {
+    const name     = document.getElementById("displayName").innerText;
+    const title    = document.getElementById("displayTitle").innerText;
+    const about    = document.getElementById("aboutMe").value;
+    const imgSrc   = document.getElementById("previewImg").src;
     const projects = [...document.querySelectorAll(".project-input")]
         .map(i => i.value).filter(Boolean);
 
-    const htmlContent = `<!DOCTYPE html>
+    return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${name} — CV</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
-    body{background:#1a1f15;font-family:'Poppins',sans-serif;color:#fff}
-    header{text-align:center;padding:60px 20px 30px}
-    h1{font-size:40px}
-    .subtitle{color:#a4b465;font-size:20px;margin-top:8px}
-    section{width:65%;margin:30px auto;background:rgba(255,255,255,0.07);
-            backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.15);
-            border-radius:18px;padding:40px}
-    h2{color:#a4b465;margin-bottom:16px}
-    p{line-height:1.8;color:#ddd}
-    .project{background:rgba(255,255,255,0.1);padding:12px;
-             border-radius:10px;margin:8px 0;color:#fff}
+    body{background:#1a1f15;font-family:'Poppins',sans-serif;color:#fff;min-height:100vh}
+    header{text-align:center;padding:60px 20px 30px;display:flex;flex-direction:column;align-items:center;gap:12px}
+    .profile-container{position:relative;width:154px;height:154px;display:flex;justify-content:center;align-items:center}
+    .profile-container::before{content:"";position:absolute;width:174px;height:174px;border-radius:50%;background:conic-gradient(#a4b465,#535d0a,#a4b465);animation:spin 3s linear infinite;z-index:0}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .profile-img{width:150px;height:150px;border-radius:50%;object-fit:cover;position:relative;z-index:1;border:3px solid #1a1f15}
+    .profile-name{font-size:40px;font-weight:700;color:#fff}
+    .profile-title{color:#a4b465;font-size:18px;font-weight:500;letter-spacing:1px}
+    nav ul{display:flex;list-style:none;gap:2rem;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);padding:12px 32px;border-radius:30px;border:1px solid rgba(164,180,101,.2)}
+    nav a{color:#e8f0c8;text-decoration:none;font-weight:600;font-size:14px}
+    nav a:hover{color:#a4b465}
+    hr{border:none;height:2px;width:70%;margin:40px auto;background:linear-gradient(90deg,transparent,#a4b465,transparent);opacity:.6}
+    .glass-box{width:65%;margin:0 auto 60px;padding:40px;border-radius:18px;background:rgba(255,255,255,.07);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.15);text-align:center}
+    .glass-box h2{font-size:22px;font-weight:700;color:#a4b465;margin-bottom:20px;text-transform:uppercase}
+    .glass-box p{line-height:1.8;color:#ddd}
+    .project{background:rgba(255,255,255,.1);padding:12px 16px;border-radius:10px;margin:8px 0;color:#fff;text-align:left}
+    @media(max-width:768px){.glass-box{width:90%;padding:24px}.profile-name{font-size:28px}nav ul{gap:1rem;padding:10px 20px;flex-wrap:wrap;justify-content:center}}
   </style>
 </head>
 <body>
   <header>
-    <h1>${name}</h1>
-    <p class="subtitle">${title}</p>
+    <div class="profile-container">
+      <img class="profile-img" src="${imgSrc}" alt="${name}">
+    </div>
+    <h1 class="profile-name">${name}</h1>
+    <p class="profile-title">${title}</p>
+    <nav><ul>
+      <li><a href="#about">About Me</a></li>
+      <li><a href="#myWork">My Work</a></li>
+    </ul></nav>
   </header>
-  <section>
+  <hr/>
+  <section id="about" class="glass-box">
     <h2>About Me</h2>
-    <p>${about}</p>
+    <p>${about || "No info yet."}</p>
   </section>
-  <section>
+  <hr/>
+  <section id="myWork" class="glass-box">
     <h2>My Work</h2>
-    ${projects.map(p => `<div class="project">${p}</div>`).join("")}
+    ${projects.length
+      ? projects.map(p => `<div class="project">⚡ ${p}</div>`).join("")
+      : "<p>No projects added yet.</p>"
+    }
   </section>
 </body>
 </html>`;
+}
+
+async function generateCV() {
+    const username = document.getElementById("cvUsername").value.trim();
+    if (!username) { alert("اكتب username أولاً!"); return; }
+
+    const btn = document.getElementById("generateBtn");
+    btn.textContent = "⏳ ...";
+    btn.disabled = true;
 
     try {
         const res = await fetch("https://smartcv.mwydbdarnt.workers.dev", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, htmlContent }),
+            body: JSON.stringify({ username, htmlContent: buildCVHtml() }),
         });
 
         const data = await res.json();
@@ -271,7 +268,7 @@ async function generateCV() {
     } catch (e) {
         alert("حدث خطأ، تأكد من الاتصال");
     } finally {
-        btn.textContent = "🚀 Generate My CV Link";
+        btn.textContent = "Generate Link";
         btn.disabled = false;
     }
 }
