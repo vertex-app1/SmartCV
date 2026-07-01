@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Name — CV</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-general">
+  <div class="theme-bg"></div>
+  <div class="overlay"></div>
+  <header>
+    <div class="profile-container">
+      <img class="profile-img" src="https://ui-avatars.com/api/?name=Your+Name&background=535d0a&color=fff&size=150" alt="Your Name">
+    </div>
+    <h1 class="profile-name">Your Name</h1>
+    <p class="profile-title">Your Title</p>
+    <div class="social-icons"></div>
+    
+    <nav><ul>
+      <li><a href="#about">About Me</a></li>
+      <li><a href="#myWork">My Work</a></li>
+    </ul></nav>
+  </header>
+  <hr/>
+  <section id="about" class="glass-box">
+    <h2>About Me</h2>
+    <p id="aboutText">No info yet.</p>
+  </section>
+  <hr/>
+  <section id="myWork" class="glass-box">
+    <h2>My Work</h2>
+    <p>No projects added yet.</p>
+  </section>
+  <div style="text-align:center;margin-bottom:60px">
+    <button class="btn-pdf" style="max-width:260px;margin:0 auto" onclick="saveAsPDF()">📄 Save as PDF (ATS-Friendly)</button>
+  </div>
+  <div id="atsPrintArea"></div>
+<script>
+const audioEl = document.getElementById('audio');
+if (audioEl) {
+  const playBtn = document.getElementById('playBtn');
+  const progressEl = document.getElementById('progress');
+  const progressContainer = document.getElementById('progressContainer');
+  playBtn.addEventListener('click', () => {
+    if (audioEl.paused) { audioEl.play(); playBtn.textContent = '❚❚'; }
+    else { audioEl.pause(); playBtn.textContent = '▶'; }
+  });
+  audioEl.addEventListener('timeupdate', () => {
+    if (!audioEl.duration) return;
+    progressEl.style.width = (audioEl.currentTime / audioEl.duration * 100) + '%';
+  });
+  progressContainer.addEventListener('click', (e) => {
+    audioEl.currentTime = (e.offsetX / progressContainer.clientWidth) * audioEl.duration;
+  });
+}
+
+function saveAsPDF() {
+  const name = "Your Name";
+  const title = "Your Title";
+  const about = document.getElementById('aboutText').innerText;
+  const contacts = [];
+  const projects = [];
+  let html = '<h1>' + name + '</h1><h3>' + title + '</h3>';
+  html += '<p class="contact-line">' + contacts.join(' | ') + '</p>';
+  html += '<h2>About Me</h2><p>' + about + '</p>';
+  html += '<h2>Projects</h2>';
+  projects.forEach(p => { html += '<p class="project-line"><strong>' + p.name + '</strong>' + (p.link ? ' - ' + p.link : '') + '</p>'; });
+  document.getElementById('atsPrintArea').innerHTML = html;
+  window.print();
+}
+</script>
+</body>
+</html>
